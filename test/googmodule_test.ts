@@ -30,7 +30,8 @@ function processES5(fileName: string, content: string, {
     fileNameToModuleId: (fn: string) => path.relative(rootDir, fn),
     pathToModuleName: (context, fileName) =>
         testSupport.pathToModuleName(rootDir, context, fileName),
-    es5Mode: isES5,
+    devmode: isES5,
+    devmodeLanguageLevel: isES5 ? 'es5' : undefined,
     options: testSupport.compilerOptions,
     moduleResolutionHost: tsHost,
     isJsTranspilation,

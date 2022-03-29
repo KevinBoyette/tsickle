@@ -32,7 +32,9 @@ export interface GoogModuleProcessorHost {
   /** Identifies whether this file is the result of a JS transpilation. */
   isJsTranspilation?: boolean;
   /** Whether the emit targets ES5 or ES6+. */
-  es5Mode?: boolean;
+  devmode?: boolean;
+  /** */
+  devmodeLanguageLevel?: string;
   /**
    * expand "import 'foo';" to "import 'foo/index';" if it points to an index
    * file.
@@ -631,6 +633,8 @@ export function commonJsToGoogmoduleTransformer(
           return createNotEmittedStatementWithComments(sf, original);
         }
 
+        const useConst = host.devmode && host.devmodeLanguageLevel !== 'es5';
+
         if (newIdent) {
           // Create a statement like one of:
           //   var foo = goog.require('bar');
@@ -643,7 +647,7 @@ export function commonJsToGoogmoduleTransformer(
                   [varDecl],
                   // Use 'const' in ES6 mode so Closure properly forwards type
                   // aliases.
-                  host.es5Mode ? undefined : ts.NodeFlags.Const));
+                  useConst ? undefined : ts.NodeFlags.Const));
           return ts.setOriginalNode(
               ts.setTextRange(newStmt, original), original);
         } else if (!newIdent && !existingImport) {

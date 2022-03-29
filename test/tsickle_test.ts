@@ -29,7 +29,8 @@ describe('emitWithTsickle', () => {
     const {program, host: tsHost} = testSupport.createProgramAndHost(sources, tsCompilerOptions);
     testSupport.expectDiagnosticsEmpty(ts.getPreEmitDiagnostics(program));
     const tsickleHost: tsickle.TsickleHost = {
-      es5Mode: true,
+      devmode: true,
+      devmodeLanguageLevel: 'es5',
       googmodule: false,
       convertIndexImportShorthand: true,
       transformDecorators: true,
@@ -103,7 +104,7 @@ describe('emitWithTsickle', () => {
           preserveConstEnums: true,
           module: ts.ModuleKind.ES2015,
         },
-        {es5Mode: false, googmodule: false});
+        {devmode: false, googmodule: false});
 
     expect(jsSources['b.js']).toContain(`export { Foo } from './a';`);
   });
@@ -137,7 +138,7 @@ export function f() { return f; }
                declaration: true,
                module: ts.ModuleKind.ES2015,
              },
-             {es5Mode: false, googmodule: false});
+             {devmode: false, googmodule: false});
 
          expect(jsSources['b.d.ts']).toEqual(`export * from './a';\n`);
        });
